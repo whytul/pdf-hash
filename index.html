@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF 해시 위변조 검증</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 620px;
+      background: #16213e;
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 28px;
+      color: #e94560;
+      letter-spacing: 1px;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .file-select-area {
+      display: flex;
+      gap: 10px;
+    }
+
+    .file-path {
+      flex: 1;
+      background: #0f3460;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #ccc;
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.6;
+    }
+
+    .file-path.has-file {
+      color: #fff;
+    }
+
+    button {
+      background: #e94560;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: #c73650;
+    }
+
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+
+    .algorithm-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .algorithm-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #0f3460;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #ccc;
+      font-weight: 400;
+      transition: background 0.2s;
+    }
+
+    .algorithm-group label:hover {
+      background: #1a4a7a;
+    }
+
+    .algorithm-group input[type="radio"] {
+      accent-color: #e94560;
+    }
+
+    .algorithm-group input[type="radio"]:checked + span {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .hash-input {
+      width: 100%;
+      background: #0f3460;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 13px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .hash-input:focus {
+      border-color: #e94560;
+    }
+
+    .hash-input::placeholder {
+      color: #555;
+    }
+
+    .progress-section {
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    .progress-section.visible {
+      display: block;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 24px;
+      background: #0f3460;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e94560, #0f3460);
+      border-radius: 12px;
+      width: 0%;
+      transition: width 0.15s ease;
+    }
+
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .verify-btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 10px;
+      margin-top: 4px;
+    }
+
+    .result-section {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .result-section.visible {
+      display: block;
+    }
+
+    .result-section.match {
+      background: rgba(46, 213, 115, 0.15);
+      border: 2px solid #2ed573;
+    }
+
+    .result-section.mismatch {
+      background: rgba(255, 71, 87, 0.15);
+      border: 2px solid #ff4757;
+    }
+
+    .result-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .result-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .result-section.match .result-title {
+      color: #2ed573;
+    }
+
+    .result-section.mismatch .result-title {
+      color: #ff4757;
+    }
+
+    .result-detail {
+      font-size: 11px;
+      color: #888;
+      font-family: 'Consolas', 'Courier New', monospace;
+      word-break: break-all;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .result-detail strong {
+      color: #bbb;
+    }
+
+    .file-info {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PDF 해시 위변조 검증</h1>
+
+    <!-- 파일 선택 -->
+    <div class="section">
+      <label>PDF 파일 선택</label>
+      <div class="file-select-area">
+        <div class="file-path" id="filePath">파일을 선택하세요...</div>
+        <button id="selectFileBtn">파일 찾기</button>
+      </div>
+      <div class="file-info" id="fileInfo"></div>
+    </div>
+
+    <!-- 해시 알고리즘 선택 -->
+    <div class="section">
+      <label>해시 알고리즘</label>
+      <div class="algorithm-group">
+        <label>
+          <input type="radio" name="algorithm" value="sha256" checked>
+          <span>SHA-256 (권장)</span>
+        </label>
+        <label>
+          <input type="radio" name="algorithm" value="sha512">
+          <span>SHA-512</span>
+        </label>
+        <label>
+          <input type="radio" name="algorithm" value="md5">
+          <span>MD5</span>
+        </label>
+        <label>
+          <input type="radio" name="algorithm" value="sha1">
+          <span>SHA-1</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 비교할 해시값 입력 -->
+    <div class="section">
+      <label>비교할 해시값 입력</label>
+      <input type="text" class="hash-input" id="expectedHash"
+             placeholder="비교할 해시값을 여기에 붙여넣기 하세요...">
+    </div>
+
+    <!-- 프로그레스 바 -->
+    <div class="progress-section" id="progressSection">
+      <label>검증 진행률</label>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
+        <div class="progress-text" id="progressText">0%</div>
+      </div>
+    </div>
+
+    <!-- 검증 버튼 -->
+    <button class="verify-btn" id="verifyBtn" disabled>검증 시작</button>
+
+    <!-- 결과 표시 -->
+    <div class="result-section" id="resultSection">
+      <div class="result-icon" id="resultIcon"></div>
+      <div class="result-title" id="resultTitle"></div>
+      <div class="result-detail" id="resultDetail"></div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

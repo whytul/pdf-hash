@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="620" viewBox="0 0 700 620">
+  <defs>
+    <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e94560"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="620" fill="#1a1a2e"/>
+
+  <!-- Container -->
+  <rect x="40" y="30" width="620" height="560" rx="16" fill="#16213e" filter="url(#shadow)"/>
+
+  <!-- Title -->
+  <text x="350" y="78" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="22" font-weight="bold" fill="#e94560" letter-spacing="1">PDF 해시 위변조 검증</text>
+
+  <!-- PDF 파일 선택 label -->
+  <text x="76" y="120" font-family="Segoe UI, sans-serif" font-size="13" fill="#aaa" font-weight="600">PDF 파일 선택</text>
+
+  <!-- File path box (file selected) -->
+  <rect x="76" y="130" width="440" height="40" rx="8" fill="#0f3460" stroke="#333" stroke-width="1"/>
+  <text x="90" y="155" font-family="Segoe UI, sans-serif" font-size="13" fill="#fff">C:\Users\Documents\계약서_최종.pdf</text>
+
+  <!-- File select button (disabled) -->
+  <rect x="526" y="130" width="100" height="40" rx="8" fill="#555"/>
+  <text x="576" y="155" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="14" fill="#fff" font-weight="600">파일 찾기</text>
+
+  <!-- File info -->
+  <text x="76" y="185" font-family="Segoe UI, sans-serif" font-size="12" fill="#666">파일명: 계약서_최종.pdf | 크기: 2.45 MB</text>
+
+  <!-- 해시 알고리즘 label -->
+  <text x="76" y="215" font-family="Segoe UI, sans-serif" font-size="13" fill="#aaa" font-weight="600">해시 알고리즘</text>
+
+  <!-- Algorithm buttons -->
+  <rect x="76" y="225" width="130" height="36" rx="8" fill="#1a4a7a"/>
+  <circle cx="94" cy="243" r="6" fill="none" stroke="#e94560" stroke-width="2"/>
+  <circle cx="94" cy="243" r="3" fill="#e94560"/>
+  <text x="108" y="248" font-family="Segoe UI, sans-serif" font-size="13" fill="#fff" font-weight="600">SHA-256 (권장)</text>
+
+  <rect x="216" y="225" width="95" height="36" rx="8" fill="#0f3460"/>
+  <circle cx="234" cy="243" r="6" fill="none" stroke="#666" stroke-width="2"/>
+  <text x="248" y="248" font-family="Segoe UI, sans-serif" font-size="13" fill="#ccc">SHA-512</text>
+
+  <rect x="321" y="225" width="70" height="36" rx="8" fill="#0f3460"/>
+  <circle cx="339" cy="243" r="6" fill="none" stroke="#666" stroke-width="2"/>
+  <text x="353" y="248" font-family="Segoe UI, sans-serif" font-size="13" fill="#ccc">MD5</text>
+
+  <rect x="401" y="225" width="75" height="36" rx="8" fill="#0f3460"/>
+  <circle cx="419" cy="243" r="6" fill="none" stroke="#666" stroke-width="2"/>
+  <text x="433" y="248" font-family="Segoe UI, sans-serif" font-size="13" fill="#ccc">SHA-1</text>
+
+  <!-- 비교할 해시값 입력 label -->
+  <text x="76" y="300" font-family="Segoe UI, sans-serif" font-size="13" fill="#aaa" font-weight="600">비교할 해시값 입력</text>
+
+  <!-- Hash input box (filled) -->
+  <rect x="76" y="310" width="550" height="40" rx="8" fill="#0f3460" stroke="#e94560" stroke-width="1"/>
+  <text x="90" y="335" font-family="Consolas, monospace" font-size="12" fill="#fff">a1b2c3d4e5f6789012345678abcdef9012345678abcdef901234567890abcdef</text>
+
+  <!-- Progress bar label -->
+  <text x="76" y="385" font-family="Segoe UI, sans-serif" font-size="13" fill="#aaa" font-weight="600">검증 진행률</text>
+
+  <!-- Progress bar background -->
+  <rect x="76" y="395" width="550" height="24" rx="12" fill="#0f3460"/>
+
+  <!-- Progress bar fill (65%) -->
+  <rect x="76" y="395" width="357" height="24" rx="12" fill="url(#progressGrad)"/>
+
+  <!-- Progress text -->
+  <text x="351" y="412" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="12" fill="#fff" font-weight="700">65%</text>
+
+  <!-- Verify button (disabled, in progress) -->
+  <rect x="76" y="440" width="550" height="48" rx="10" fill="#555"/>
+  <text x="351" y="470" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="16" fill="#fff" font-weight="600">검증 중...</text>
+</svg>
